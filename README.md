@@ -18,7 +18,7 @@ O app não acessa o banco diretamente: tudo passa pela API, que precisa estar ro
 Instale antes de começar:
 
 | Programa | Versão | Para quê |
-|---|---|---|---|
+|---|---|---|
 | **Git** | qualquer recente | baixar o projeto 
 | **Node.js** | 18 ou mais nova (testado na 26) | rodar a API |
 | **MongoDB Community Server** | 6 ou mais nova (testado na 8.3) | banco de dados |
