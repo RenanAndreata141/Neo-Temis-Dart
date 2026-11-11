@@ -6,20 +6,15 @@ import 'api_service.dart';
 import 'assistente.dart';
 import 'theme.dart';
 
-/// Troca de tela pelo menu, sem empilhar telas no histórico.
 void irPara(BuildContext context, String rota) {
   Navigator.pushNamedAndRemoveUntil(context, rota, (_) => false);
 }
 
-/// Estrutura comum das telas internas (Início e Processos):
-/// fundo com a estátua, cabeçalho, saudação e botão do assistente.
-/// Cada tela só precisa passar o seu conteúdo em [child].
 class NeoPaginaBase extends StatelessWidget {
   const NeoPaginaBase({super.key, required this.child, this.onPesquisar});
 
   final Widget child;
 
-  /// Chamado a cada letra digitada na barra de pesquisa.
   final ValueChanged<String>? onPesquisar;
 
   @override
@@ -28,7 +23,6 @@ class NeoPaginaBase extends StatelessWidget {
       backgroundColor: NeoCores.fundo,
       body: Stack(
         children: [
-          // Fundo branco com a estátua desfocada à direita (imagem já vem desfocada)
           Positioned.fill(
             child: Image.asset(
               'assets/images/NEOhomeFUNDO.png',
@@ -37,7 +31,6 @@ class NeoPaginaBase extends StatelessWidget {
             ),
           ),
 
-          // Cabeçalho fixo + conteúdo com rolagem
           Column(
             children: [
               _Cabecalho(onPesquisar: onPesquisar),
@@ -64,9 +57,6 @@ class NeoPaginaBase extends StatelessWidget {
   }
 }
 
-// ---------------------------------------------------------------------------
-// Cabeçalho: logo, menu, pesquisa e avatar
-// ---------------------------------------------------------------------------
 class _Cabecalho extends StatelessWidget {
   const _Cabecalho({this.onPesquisar});
 
@@ -160,7 +150,6 @@ class _BarraPesquisa extends StatelessWidget {
   }
 }
 
-/// Círculo com a inicial do usuário. Ao clicar, pergunta se quer sair.
 class _Avatar extends StatelessWidget {
   const _Avatar();
 
@@ -203,10 +192,6 @@ class _Avatar extends StatelessWidget {
     );
   }
 }
-
-// ---------------------------------------------------------------------------
-// "Olá André | Domingo, 12 de outubro | 14:28:59" (atualiza a cada segundo)
-// ---------------------------------------------------------------------------
 class _Saudacao extends StatefulWidget {
   const _Saudacao();
 
@@ -261,9 +246,6 @@ class _SaudacaoState extends State<_Saudacao> {
   }
 }
 
-// ---------------------------------------------------------------------------
-// Botão redondo com a logo da Têmis (assistente)
-// ---------------------------------------------------------------------------
 class _BotaoAssistente extends StatelessWidget {
   const _BotaoAssistente();
 

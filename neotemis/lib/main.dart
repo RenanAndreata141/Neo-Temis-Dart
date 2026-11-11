@@ -15,7 +15,6 @@ final messengerKey = GlobalKey<ScaffoldMessengerState>();
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  // Quando o usuário sai (ou a sessão expira), volta para o login.
   Api.aoDeslogar = ({bool sessaoExpirada = false}) {
     Assistente.limpar();
     navigatorKey.currentState?.pushNamedAndRemoveUntil('/login', (_) => false);

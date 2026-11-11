@@ -10,7 +10,6 @@ import 'processo.dart';
 import 'processo_dialog.dart';
 import 'theme.dart';
 
-/// Tela de processos: tabela à esquerda e card de filtro à direita.
 class ProcessosPage extends StatefulWidget {
   const ProcessosPage({super.key});
 
@@ -69,7 +68,6 @@ class _ProcessosPageState extends State<ProcessosPage> {
     _carregar();
   }
 
-  /// Abre o diálogo para ver/editar um processo (ou criar, se for nulo).
   Future<void> _abrir({Processo? processo}) async {
     final resultado = await mostrarProcessoDialog(context, processo: processo);
     if (resultado == null || !mounted) return;
@@ -86,7 +84,6 @@ class _ProcessosPageState extends State<ProcessosPage> {
     });
   }
 
-  /// Marca ou desmarca um valor em um conjunto.
   void _alternar(Set<String> conjunto, String valor) {
     setState(() {
       if (!conjunto.remove(valor)) conjunto.add(valor);
@@ -104,11 +101,9 @@ class _ProcessosPageState extends State<ProcessosPage> {
     });
   }
 
-  /// Processos que passam pela pesquisa e pelo filtro de status.
   List<Processo> get _visiveis {
     final busca = _busca.toLowerCase();
 
-    // Filtro do assistente: mostra só os ids escolhidos, na ordem da IA.
     var base = _processos;
     final filtroIa = Assistente.filtro.value;
     if (filtroIa != null) {
@@ -142,9 +137,6 @@ class _ProcessosPageState extends State<ProcessosPage> {
     );
   }
 
-  // -------------------------------------------------------------------------
-  // Card da tabela
-  // -------------------------------------------------------------------------
   Widget _cardProcessos() {
     final lista = _visiveis;
     final todosMarcados =
@@ -170,7 +162,6 @@ class _ProcessosPageState extends State<ProcessosPage> {
           ),
           const SizedBox(height: 37),
 
-          // Cabeçalho da tabela: [ ] NÚMERO CNJ
           Row(
             children: [
               const SizedBox(width: 17),
@@ -203,7 +194,6 @@ class _ProcessosPageState extends State<ProcessosPage> {
     return Colors.black;
   }
 
-  /// Faixa que mostra o filtro aplicado pelo assistente, com botão para limpar.
   Widget _avisoFiltroIa(int quantidade) {
     return Container(
       margin: const EdgeInsets.only(bottom: 8),
@@ -256,7 +246,6 @@ class _ProcessosPageState extends State<ProcessosPage> {
       );
     }
 
-    // Sempre desenha pelo menos 13 linhas, como no Figma
     final totalLinhas = max(lista.length, _linhasMinimas);
     return Container(
       decoration: BoxDecoration(border: Border.all()),
@@ -269,7 +258,6 @@ class _ProcessosPageState extends State<ProcessosPage> {
     );
   }
 
-  /// Uma linha da tabela. Se [p] for nulo, desenha uma linha vazia.
   Widget _linha(Processo? p, {required bool ultima}) {
     final texto = p == null ? '' : (p.numero.isNotEmpty ? p.numero : p.nome);
 
@@ -281,7 +269,6 @@ class _ProcessosPageState extends State<ProcessosPage> {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          // Coluna da caixa de seleção
           Container(
             width: 50,
             alignment: Alignment.center,
@@ -291,7 +278,6 @@ class _ProcessosPageState extends State<ProcessosPage> {
               onTap: p == null ? null : () => _alternar(_selecionados, p.id),
             ),
           ),
-          // Número do processo (clique abre os detalhes)
           Expanded(
             child: InkWell(
               onTap: p == null ? null : () => _abrir(processo: p),
@@ -304,7 +290,6 @@ class _ProcessosPageState extends State<ProcessosPage> {
               ),
             ),
           ),
-          // Prazo (vermelho = vencido, laranja = vence em até 7 dias)
           Container(
             width: _larguraPrazo,
             padding: const EdgeInsets.only(left: 14),
@@ -327,9 +312,6 @@ class _ProcessosPageState extends State<ProcessosPage> {
   }
 }
 
-// ---------------------------------------------------------------------------
-// Card de filtro por status
-// ---------------------------------------------------------------------------
 class _CardFiltro extends StatelessWidget {
   const _CardFiltro({
     required this.marcados,
@@ -387,7 +369,6 @@ class _CardFiltro extends StatelessWidget {
   }
 }
 
-/// Caixa de seleção quadrada (branca com borda preta).
 class _CaixaMarcacao extends StatelessWidget {
   const _CaixaMarcacao({required this.marcada, this.onTap, this.tamanho = 15});
 
