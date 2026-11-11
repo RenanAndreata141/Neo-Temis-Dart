@@ -109,7 +109,7 @@ npm start        # ou: npm run dev  (reinicia sozinho ao salvar arquivos)
 
 Deve aparecer `Neotemis API rodando na porta 3000`. **Deixe esse terminal aberto** enquanto usa o app.
 
-> ⚠️ Rode `npm start` **dentro da pasta `neotemis_api`**. Rodar na pasta `NeoTemis` dá o erro `ENOENT: no such file or directory, open '.../package.json'`.
+> Rode `npm start` **dentro da pasta `neotemis_api`**. Rodar na pasta `NeoTemis` dá o erro `ENOENT: no such file or directory, open '.../package.json'`.
 
 ### 4. Rodar o app
 
