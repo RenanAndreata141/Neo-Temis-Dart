@@ -139,17 +139,6 @@ Para funcionar, a API precisa da `GEMINI_API_KEY` no `.env`. Sem ela, o resto do
 
 ---
 
-## Problemas comuns
-
-| Mensagem | Causa | Solução |
-|---|---|---|
-| `ENOENT ... package.json` | `npm start` na pasta errada | Entre em `neotemis_api` antes |
-| `EADDRINUSE: address already in use :::3000` | A API já está rodando em outro terminal | Feche o outro terminal ou mude `PORT` no `.env` |
-| `Falha ao conectar no MongoDB` | MongoDB desligado ou `MONGODB_URI` errada | Inicie o MongoDB (passo 2) e confira o `.env` |
-| `Defina MONGODB_URI e JWT_SECRET` | Falta o arquivo `.env` | Faça o passo 3 |
-| App: "Não foi possível conectar ao servidor" | API desligada | Rode `npm start` em `neotemis_api` |
-| Chat: "Modelo não encontrado" / "sobrecarregada" | Modelo do Gemini desativado ou ocupado | Ajuste `GEMINI_MODEL` (vários separados por vírgula) |
-| `flutter run`: "No supported devices connected" | Falta o suporte a desktop | Instale as dependências extras e confira `flutter doctor` |
 
 ---
 
