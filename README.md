@@ -140,7 +140,6 @@ Para funcionar, a API precisa da `GEMINI_API_KEY` no `.env`. Sem ela, o resto do
 ---
 
 
----
 
 ## Outras plataformas (opcional)
 
