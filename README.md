@@ -30,7 +30,7 @@ Instale antes de começar:
 
 O app está configurado para **Linux** e **Windows** (desktop).
 
-- **Windows:** [Visual Studio 2022](https://visualstudio.microsoft.com/) (não é o VS Code) com a carga de trabalho **"Desenvolvimento para desktop com C++"**.
+- **Windows:** Visual Studio 2022 com a carga de trabalho **"Desenvolvimento para desktop com C++"**.
 - **Linux:** compilador e bibliotecas do GTK:
   ```bash
   # Ubuntu / Debian / Mint
@@ -40,7 +40,7 @@ O app está configurado para **Linux** e **Windows** (desktop).
   sudo pacman -S clang cmake ninja pkgconf gtk3
   ```
 
-Depois de instalar, rode `flutter doctor`. Os itens de **Flutter** e do desktop (Linux toolchain ou Visual Studio) precisam aparecer com ✓.
+Depois de instalar, rode `flutter doctor`. Os itens de **Flutter** e do desktop (Linux toolchain ou Visual Studio) precisam aparecer com.
 
 ### Bibliotecas usadas (instaladas automaticamente)
 
