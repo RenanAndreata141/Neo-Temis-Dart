@@ -1,4 +1,4 @@
-# NeoTemis
+# NeoTêmis
 
 Aplicativo de gestão de processos jurídicos para advogados. O advogado entra com o registro da OAB, cadastra seus processos (com status, prazo de vencimento e imagem) e pode pedir ajuda à **Têmis**, uma assistente com IA que filtra os processos na tela e avisa quais prazos estão mais próximos.
 
