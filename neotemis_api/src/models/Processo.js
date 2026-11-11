@@ -15,6 +15,8 @@ const processoSchema = new mongoose.Schema(
     cliente: { type: String, trim: true, maxlength: 160, default: '' },
     status: { type: String, enum: STATUS, default: STATUS[0] },
     descricao: { type: String, trim: true, maxlength: 10000, default: '' },
+    // Data de vencimento (prazo) do processo. Guardada como meia-noite UTC do dia.
+    prazo: { type: Date, default: null },
     imagem: {
       dados: { type: Buffer, select: false },
       tipo: { type: String },
@@ -31,6 +33,8 @@ processoSchema.methods.paraJson = function () {
     cliente: this.cliente,
     status: this.status,
     descricao: this.descricao,
+    // "AAAA-MM-DD" ou null
+    prazo: this.prazo ? this.prazo.toISOString().slice(0, 10) : null,
     temImagem: !!(this.imagem && this.imagem.tipo),
     atualizadoEm: this.updatedAt ? this.updatedAt.getTime() : 0,
   };

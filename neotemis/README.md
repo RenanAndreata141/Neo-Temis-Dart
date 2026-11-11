@@ -1,17 +1,12 @@
-# neotemis
+# NeoTemis — app (Flutter)
 
-A new Flutter project.
+Interface do NeoTemis. Precisa da API (`../neotemis_api`) rodando.
 
-## Getting Started
+Instruções completas de instalação e dependências: veja o [README principal](../README.md).
 
-This project is a starting point for a Flutter application.
+Resumo:
 
-A few resources to get you started if this is your first Flutter project:
-
-- [Learn Flutter](https://docs.flutter.dev/get-started/learn-flutter)
-- [Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Flutter learning resources](https://docs.flutter.dev/reference/learning-resources)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+```bash
+flutter pub get
+flutter run -d linux      # ou: flutter run -d windows
+```

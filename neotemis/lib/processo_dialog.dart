@@ -45,6 +45,7 @@ class _ProcessoDialogState extends State<_ProcessoDialog> {
   late final TextEditingController _cliente;
   late final TextEditingController _descricao;
   late String _status;
+  DateTime? _prazo;
   late bool _editando;
 
   Uint8List? _novaImagem;
@@ -69,6 +70,7 @@ class _ProcessoDialogState extends State<_ProcessoDialog> {
     _cliente = TextEditingController(text: p?.cliente ?? '');
     _descricao = TextEditingController(text: p?.descricao ?? '');
     _status = p?.status ?? Processo.statusOpcoes.first;
+    _prazo = p?.prazo;
     _editando = _novo;
   }
 
@@ -132,6 +134,7 @@ class _ProcessoDialogState extends State<_ProcessoDialog> {
       _cliente.text = p.cliente;
       _descricao.text = p.descricao;
       _status = p.status;
+      _prazo = p.prazo;
       _novaImagem = null;
       _novoTipo = null;
       _removerImagem = false;
@@ -155,6 +158,7 @@ class _ProcessoDialogState extends State<_ProcessoDialog> {
         cliente: _cliente.text.trim(),
         status: _status,
         descricao: _descricao.text.trim(),
+        prazo: _prazo,
       );
       final salvo = await Api.salvar(
         rascunho,
@@ -236,6 +240,42 @@ class _ProcessoDialogState extends State<_ProcessoDialog> {
         validator: validator,
         style: NeoTextos.platypi(size: 18),
         decoration: _decoracao(label),
+      ),
+    );
+  }
+
+  Future<void> _escolherPrazo() async {
+    final hoje = DateTime.now();
+    final escolhido = await showDatePicker(
+      context: context,
+      initialDate: _prazo ?? hoje,
+      firstDate: DateTime(2000),
+      lastDate: DateTime(hoje.year + 20),
+      helpText: 'Prazo (vencimento)',
+    );
+    if (escolhido != null) setState(() => _prazo = escolhido);
+  }
+
+  Widget _campoPrazo() {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 16),
+      child: InkWell(
+        onTap: _editando ? _escolherPrazo : null,
+        child: InputDecorator(
+          decoration: _decoracao('Prazo (vencimento)').copyWith(
+            suffixIcon: _editando && _prazo != null
+                ? IconButton(
+                    tooltip: 'Remover prazo',
+                    icon: const Icon(Icons.clear),
+                    onPressed: () => setState(() => _prazo = null),
+                  )
+                : const Icon(Icons.event_outlined),
+          ),
+          child: Text(
+            _prazo == null ? 'Sem prazo' : dataBr(_prazo!),
+            style: NeoTextos.platypi(size: 18),
+          ),
+        ),
       ),
     );
   }
@@ -374,6 +414,7 @@ class _ProcessoDialogState extends State<_ProcessoDialog> {
                                 : null,
                           ),
                         ),
+                        _campoPrazo(),
                         _campo('Descrição / andamento', _descricao, maxLines: 5),
                       ],
                     ),

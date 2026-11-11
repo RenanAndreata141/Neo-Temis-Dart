@@ -17,6 +17,7 @@ app.use(express.json({ limit: '12mb' }));
 app.get('/', (req, res) => res.json({ ok: true, servico: 'neotemis-api' }));
 app.use('/auth', require('./routes/auth'));
 app.use('/processos', require('./routes/processos'));
+app.use('/assistente', require('./routes/assistente'));
 
 app.use((err, req, res, next) => {
   if (err.type === 'entity.too.large') {

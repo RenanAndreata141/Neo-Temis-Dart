@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-import 'api_service.dart';
-import 'processos_page.dart';
+import 'componentes.dart';
+import 'neotemis_layout.dart';
 import 'theme.dart';
 
 class HomePage extends StatelessWidget {
@@ -9,99 +9,64 @@ class HomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final nome = Api.usuario?['nome'] as String?;
-
-    return Scaffold(
-      backgroundColor: NeoCores.fundo,
-      body: Center(
-        child: SingleChildScrollView(
-          child: Container(
-            width: 462,
-            padding: const EdgeInsets.symmetric(vertical: 48, horizontal: 40),
-            decoration: BoxDecoration(
-              color: NeoCores.card,
-              borderRadius: BorderRadius.circular(29),
-            ),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Image.asset(
-                  'assets/images/NeoTemis OFICIAL png 1.png',
-                  width: 233,
-                  height: 120,
-                  fit: BoxFit.contain,
-                ),
-                if (nome != null) ...[
-                  const SizedBox(height: 16),
-                  Text(
-                    'Olá, $nome',
-                    textAlign: TextAlign.center,
-                    style: NeoTextos.rajdhani(size: 20, peso: FontWeight.w600),
-                  ),
-                ],
-                const SizedBox(height: 32),
-                _BotaoMenu(
-                  texto: 'PROCESSOS',
-                  icone: Icons.folder_open,
-                  onTap: () => Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (_) => const ProcessosPage()),
-                  ),
-                ),
-                const SizedBox(height: 20),
-                _BotaoMenu(
-                  texto: 'CONFIGURAÇÕES',
-                  icone: Icons.settings,
-                  onTap: () => ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text('Configurações em breve')),
-                  ),
-                ),
-                const SizedBox(height: 20),
-                _BotaoMenu(
-                  texto: 'SAIR',
-                  icone: Icons.logout,
-                  onTap: () => Api.sair(),
-                ),
-              ],
-            ),
+    return NeoPaginaBase(
+      child: Wrap(
+        spacing: 28,
+        runSpacing: 28,
+        children: [
+          _CardMenu(
+            titulo: 'PROCESSOS',
+            tamanhoTitulo: 40,
+            icone: Icons.balance,
+            onTap: () => irPara(context, '/processos'),
           ),
-        ),
+          _CardMenu(
+            titulo: 'CONFIGURAÇÕES',
+            tamanhoTitulo: 30,
+            icone: Icons.settings_outlined,
+            onTap: () => avisar(context, 'Configurações em breve.'),
+          ),
+        ],
       ),
     );
   }
 }
 
-class _BotaoMenu extends StatelessWidget {
-  const _BotaoMenu({
-    required this.texto,
+class _CardMenu extends StatelessWidget {
+  const _CardMenu({
+    required this.titulo,
+    required this.tamanhoTitulo,
     required this.icone,
     required this.onTap,
   });
 
-  final String texto;
+  final String titulo;
+  final double tamanhoTitulo;
   final IconData icone;
   final VoidCallback onTap;
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
+    return Container(
       width: 300,
-      height: 56,
+      height: 180,
+      decoration: neoCardBranco.copyWith(color: NeoCores.cardEscuro),
       child: Material(
-        color: NeoCores.botao,
+        type: MaterialType.transparency,
         child: InkWell(
+          borderRadius: BorderRadius.circular(15),
           onTap: onTap,
-          child: Row(
+          child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Icon(icone, color: NeoCores.fundo),
-              const SizedBox(width: 12),
+              Icon(icone, size: 64, color: Colors.white),
+              const SizedBox(height: 20),
               Text(
-                texto,
+                titulo,
                 style: NeoTextos.rajdhani(
-                  size: 22,
+                  size: tamanhoTitulo,
                   peso: FontWeight.w700,
-                  cor: NeoCores.fundo,
+                  cor: Colors.white,
                 ),
               ),
             ],

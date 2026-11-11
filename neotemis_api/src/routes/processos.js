@@ -9,7 +9,6 @@ router.use(auth);
 const TIPOS_IMAGEM = ['image/jpeg', 'image/png', 'image/webp'];
 const MAX_IMAGEM_BYTES = 5 * 1024 * 1024; // 5 MB
 
-// Confere os primeiros bytes do arquivo, para não aceitar qualquer coisa só porque o "tipo" diz que é imagem.
 function bytesConferemComTipo(buf, tipo) {
   if (tipo === 'image/jpeg') return buf[0] === 0xff && buf[1] === 0xd8;
   if (tipo === 'image/png') {
@@ -21,7 +20,6 @@ function bytesConferemComTipo(buf, tipo) {
   return false;
 }
 
-// Lê os campos do corpo e valida. Retorna { erro } ou { campos, imagem, removerImagem }.
 function lerCorpo(body, { parcial }) {
   const campos = {};
 
@@ -36,6 +34,19 @@ function lerCorpo(body, { parcial }) {
   if (body.status !== undefined) {
     if (!Processo.STATUS.includes(body.status)) return { erro: 'Status inválido.' };
     campos.status = body.status;
+  }
+  if (body.prazo !== undefined) {
+    // Aceita "AAAA-MM-DD"; vazio ou null apaga o prazo.
+    if (body.prazo === null || body.prazo === '') {
+      campos.prazo = null;
+    } else {
+      const texto = String(body.prazo);
+      const data = new Date(`${texto}T00:00:00Z`);
+      if (!/^\d{4}-\d{2}-\d{2}$/.test(texto) || Number.isNaN(data.getTime())) {
+        return { erro: 'Prazo inválido. Use o formato AAAA-MM-DD.' };
+      }
+      campos.prazo = data;
+    }
   }
 
   let imagem = null;
@@ -62,7 +73,6 @@ function idValido(req, res) {
   return true;
 }
 
-// Listar (sem os bytes das imagens).
 router.get('/', async (req, res, next) => {
   try {
     const lista = await Processo.find({ usuario: req.userId }).sort({ updatedAt: -1 });
@@ -72,7 +82,6 @@ router.get('/', async (req, res, next) => {
   }
 });
 
-// Criar.
 router.post('/', async (req, res, next) => {
   try {
     const r = lerCorpo(req.body, { parcial: false });
@@ -88,7 +97,6 @@ router.post('/', async (req, res, next) => {
   }
 });
 
-// Editar (só os campos enviados). "imagem" troca a foto; "removerImagem: true" apaga.
 router.put('/:id', async (req, res, next) => {
   try {
     if (!idValido(req, res)) return;
@@ -114,7 +122,6 @@ router.put('/:id', async (req, res, next) => {
   }
 });
 
-// Excluir.
 router.delete('/:id', async (req, res, next) => {
   try {
     if (!idValido(req, res)) return;
@@ -126,7 +133,6 @@ router.delete('/:id', async (req, res, next) => {
   }
 });
 
-// Imagem do processo (binário direto do MongoDB).
 router.get('/:id/imagem', async (req, res, next) => {
   try {
     if (!idValido(req, res)) return;

@@ -96,7 +96,7 @@ class _ProcessoImagemState extends State<ProcessoImagem> {
             height: double.infinity,
             cacheWidth: 600,
             gaplessPlayback: true,
-            errorBuilder: (_, __, ___) => const ImagemPadrao(),
+            errorBuilder: (_, _, _) => const ImagemPadrao(),
           );
         }
         return ImagemPadrao(carregando: snap.connectionState != ConnectionState.done);

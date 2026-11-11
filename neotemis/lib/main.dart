@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 
 import 'api_service.dart';
+import 'assistente.dart';
 import 'cadastro_page.dart';
 import 'home_page.dart';
 import 'login_page.dart';
+import 'processos_page.dart';
 import 'theme.dart';
 
 final navigatorKey = GlobalKey<NavigatorState>();
@@ -12,58 +15,20 @@ final messengerKey = GlobalKey<ScaffoldMessengerState>();
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
+  // Quando o usuário sai (ou a sessão expira), volta para o login.
   Api.aoDeslogar = ({bool sessaoExpirada = false}) {
-    navigatorKey.currentState?.pushAndRemoveUntil(
-      MaterialPageRoute(builder: (_) => construirLogin()),
-      (_) => false,
-    );
-    if (sessaoExpirada) _aviso('Sua sessão expirou. Entre novamente.');
+    Assistente.limpar();
+    navigatorKey.currentState?.pushNamedAndRemoveUntil('/login', (_) => false);
+    if (sessaoExpirada) {
+      messengerKey.currentState?.showSnackBar(
+        const SnackBar(content: Text('Sua sessão expirou. Entre novamente.')),
+      );
+    }
   };
 
   final logado = await Api.restaurarSessao();
   runApp(NeotemisApp(logado: logado));
 }
-
-void _aviso(String mensagem) {
-  messengerKey.currentState
-    ?..clearSnackBars()
-    ..showSnackBar(SnackBar(content: Text(mensagem)));
-}
-
-Future<void> _entrar(String oab, String senha) async {
-  if (oab.isEmpty || senha.isEmpty) {
-    _aviso('Informe a OAB e a senha.');
-    return;
-  }
-
-  final nav = navigatorKey.currentState!;
-  showDialog(
-    context: navigatorKey.currentContext!,
-    barrierDismissible: false,
-    builder: (_) => const Center(child: CircularProgressIndicator()),
-  );
-
-  try {
-    await Api.login(oab, senha);
-    nav.pop();
-    nav.pushAndRemoveUntil(
-      MaterialPageRoute(builder: (_) => const HomePage()),
-      (_) => false,
-    );
-  } on ApiException catch (e) {
-    nav.pop();
-    _aviso(e.mensagem);
-  }
-}
-
-Widget construirLogin() => LoginPage(
-      onLogin: _entrar,
-      onRegister: () => navigatorKey.currentState!.push(
-        MaterialPageRoute(builder: (_) => const CadastroPage()),
-      ),
-      onForgotPassword: () =>
-          _aviso('Recuperação de senha em breve. Por enquanto, fale com o suporte.'),
-    );
 
 class NeotemisApp extends StatelessWidget {
   const NeotemisApp({super.key, required this.logado});
@@ -77,11 +42,20 @@ class NeotemisApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       navigatorKey: navigatorKey,
       scaffoldMessengerKey: messengerKey,
+      locale: const Locale('pt', 'BR'),
+      supportedLocales: const [Locale('pt', 'BR')],
+      localizationsDelegates: GlobalMaterialLocalizations.delegates,
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: NeoCores.botao),
         scaffoldBackgroundColor: NeoCores.fundo,
       ),
-      home: logado ? const HomePage() : construirLogin(),
+      home: logado ? const HomePage() : const LoginPage(),
+      routes: {
+        '/login': (_) => const LoginPage(),
+        '/cadastro': (_) => const CadastroPage(),
+        '/home': (_) => const HomePage(),
+        '/processos': (_) => const ProcessosPage(),
+      },
     );
   }
 }
