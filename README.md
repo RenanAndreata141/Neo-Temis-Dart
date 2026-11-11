@@ -90,12 +90,12 @@ Abra o `.env` e preencha:
 # Endereço do banco (local). Se usar o Atlas, cole a URL de conexão dele aqui.
 MONGODB_URI=mongodb://127.0.0.1:27017/neotemis
 
-# Qualquer texto longo e aleatório. Serve para assinar os logins.
+# Qualquer texto alatorio e de preferencia longo.
 JWT_SECRET=troque-por-um-texto-longo-e-aleatorio
 
 PORT=3000
 
-# Assistente Têmis (opcional). Chave gratuita em https://aistudio.google.com/apikey
+# Assistente Têmis, Chave gratuita em https://aistudio.google.com/apikey
 GEMINI_API_KEY=
 GEMINI_MODEL=gemini-3.5-flash,gemini-3.1-flash-lite,gemini-flash-latest
 ```
