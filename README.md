@@ -19,13 +19,12 @@ Instale antes de começar:
 
 | Programa | Versão | Para quê | Download |
 |---|---|---|---|
-| **Git** | qualquer recente | baixar o projeto | https://git-scm.com |
-| **Node.js** | 18 ou mais nova (testado na 26) | rodar a API | https://nodejs.org |
-| **MongoDB Community Server** | 6 ou mais nova (testado na 8.3) | banco de dados | https://www.mongodb.com/try/download/community |
-| **Flutter SDK** | versão que traga o Dart 3.13 ou mais novo (testado no Flutter 3.47) | rodar o app | https://docs.flutter.dev/get-started/install |
-| **Chave do Google Gemini** | gratuita, sem cartão | assistente Têmis (opcional) | https://aistudio.google.com/apikey |
+| **Git** | qualquer recente | baixar o projeto 
+| **Node.js** | 18 ou mais nova (testado na 26) | rodar a API |
+| **MongoDB Community Server** | 6 ou mais nova (testado na 8.3) | banco de dados |
+| **Flutter SDK** | versão que traga o Dart 3.13 ou mais novo (testado no Flutter 3.47) | rodar o app |
+| **Chave do Google Gemini** | gratuita, sem cartão | assistente Têmis (opcional) |
 
-Em vez de instalar o MongoDB, você também pode usar um banco gratuito na nuvem pelo [MongoDB Atlas](https://www.mongodb.com/atlas).
 
 ### Dependências extras para rodar o app no computador
 
@@ -66,7 +65,7 @@ cd NeoTemis
 Se instalou o MongoDB no computador, confira se o serviço está rodando:
 
 - **Windows:** normalmente ele já inicia sozinho como serviço. Se não, abra "Serviços" e inicie o **MongoDB Server**.
-- **Linux:** `sudo systemctl start mongodb` (em algumas distribuições o serviço se chama `mongod`).
+- **Linux:** `sudo systemctl start mongodb`
 
 ### 3. Configurar e rodar a API
 
