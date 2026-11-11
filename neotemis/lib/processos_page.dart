@@ -25,10 +25,10 @@ class _ProcessosPageState extends State<ProcessosPage> {
   bool _carregando = true;
   String? _erro;
 
-  String _busca = ''; // texto da barra de pesquisa
-  final Set<String> _selecionados = {}; // ids marcados na tabela
-  final Set<String> _statusMarcados = {}; // caixas marcadas no filtro
-  Set<String> _statusFiltro = {}; // filtro aplicado ao clicar em FILTRAR
+  String _busca = '';
+  final Set<String> _selecionados = {};
+  final Set<String> _statusMarcados = {};
+  Set<String> _statusFiltro = {};
 
   @override
   void initState() {
@@ -150,7 +150,6 @@ class _ProcessosPageState extends State<ProcessosPage> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Título + botão de novo processo
           Row(
             children: [
               const Icon(Icons.balance, size: 78),
@@ -240,7 +239,7 @@ class _ProcessosPageState extends State<ProcessosPage> {
           children: [
             TextoErro(_erro!),
             const SizedBox(height: 16),
-            NeoBotao(texto: 'TENTAR NOVAMENTE', largura: 260, onTap: _tentarNovamente),
+            NeoBotao(texto: 'tenta denovo ai, deu errado', largura: 260, onTap: _tentarNovamente),
           ],
         ),
       );

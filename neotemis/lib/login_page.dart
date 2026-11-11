@@ -29,7 +29,7 @@ class _LoginPageState extends State<LoginPage> {
     final oab = _oab.text.trim();
     final senha = _senha.text;
     if (oab.isEmpty || senha.isEmpty) {
-      setState(() => _erro = 'Informe a OAB e a senha.');
+      setState(() => _erro = 'informe a OAB e a senha');
       return;
     }
 
@@ -58,7 +58,11 @@ class _LoginPageState extends State<LoginPage> {
       children: [
         Image.asset('assets/images/NeoTemis OFICIAL png 1.png', width: 233, height: 120),
         const SizedBox(height: 39),
-        NeoCampo(controller: _oab, dica: 'Digite o registro oficial da OAB'),
+        NeoCampo(
+          controller: _oab,
+          dica: 'OAB (ex: SP 123456)',
+          mascaras: [MascaraOab()],
+        ),
         const SizedBox(height: 19),
         NeoCampo(
           controller: _senha,
@@ -73,7 +77,7 @@ class _LoginPageState extends State<LoginPage> {
             InkWell(
               onTap: () => avisar(
                 context,
-                'Recuperação de senha em breve. Por enquanto, fale com o suporte.',
+                'Recuperação de senha em breve',
               ),
               child: Text('Esqueci a senha', style: estiloLink),
             ),

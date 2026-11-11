@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'api_service.dart';
+import 'gemini_service.dart';
 import 'theme.dart';
 
 class Assistente {
@@ -26,7 +27,7 @@ class Assistente {
     _adicionar(MensagemChat(doUsuario: true, texto: texto));
     enviando.value = true;
     try {
-      final r = await Api.assistente(texto, historico);
+      final r = await Gemini.perguntar(texto, historico);
       _adicionar(MensagemChat(doUsuario: false, texto: r.texto));
       if (r.filtro != null) filtro.value = r.filtro;
       return r.filtro;
@@ -117,7 +118,6 @@ class _PainelChatState extends State<_PainelChat> {
 
     final filtro = await Assistente.enviar(texto);
 
-    // Se a IA filtrou e o usuário não está na tela de processos, leva até lá.
     if (filtro != null && !widget.naTelaProcessos && mounted) {
       Navigator.of(context).pushNamedAndRemoveUntil('/processos', (_) => false);
     }
@@ -185,7 +185,7 @@ class _PainelChatState extends State<_PainelChat> {
       padding: const EdgeInsets.all(20),
       children: [
         Text(
-          'Olá! Posso filtrar seus processos na tela e avisar quais prazos estão mais próximos.',
+          'Olá! Posso filtrar seus processos na tela e avisar quais prazos estão mais próximos',
           style: NeoTextos.rajdhani(size: 18, peso: FontWeight.w600),
         ),
         const SizedBox(height: 16),

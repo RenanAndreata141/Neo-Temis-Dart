@@ -96,11 +96,11 @@ class _ProcessoDialogState extends State<_ProcessoDialog> {
 
       final tipo = detectarTipoImagem(bytes);
       if (tipo == null) {
-        setState(() => _erro = 'Use uma imagem JPG, PNG ou WebP.');
+        setState(() => _erro = 'use uma imagem JPG, PNG ou WebP');
         return;
       }
       if (bytes.length > _limiteImagem) {
-        setState(() => _erro = 'A imagem passa de 5 MB.');
+        setState(() => _erro = 'a imagem passa de 5 MB, nossa API é muita fraca pra lidar com isso então....tenta outra');
         return;
       }
       setState(() {
@@ -110,7 +110,7 @@ class _ProcessoDialogState extends State<_ProcessoDialog> {
         _erro = null;
       });
     } catch (_) {
-      if (mounted) setState(() => _erro = 'Não foi possível abrir a imagem.');
+      if (mounted) setState(() => _erro = 'não foi possível abrir a imagem....é...deu alguma coisa errada :()');
     }
   }
 
@@ -182,7 +182,7 @@ class _ProcessoDialogState extends State<_ProcessoDialog> {
       context: context,
       builder: (ctx) => AlertDialog(
         title: const Text('Excluir processo?'),
-        content: const Text('Essa ação não pode ser desfeita.'),
+        content: const Text('essa ação não pode ser desfeita e tera consequencias.....brincadeira :)'),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(ctx, false),

@@ -15,29 +15,6 @@ class ApiException implements Exception {
   String toString() => mensagem;
 }
 
-class MensagemChat {
-  const MensagemChat({required this.doUsuario, required this.texto, this.erro = false});
-
-  final bool doUsuario;
-  final String texto;
-
-  final bool erro;
-}
-
-class FiltroAssistente {
-  const FiltroAssistente({required this.ids, required this.descricao});
-
-  final List<String> ids;
-  final String descricao;
-}
-
-class RespostaAssistente {
-  const RespostaAssistente({required this.texto, this.filtro});
-
-  final String texto;
-  final FiltroAssistente? filtro;
-}
-
 class Api {
   Api._();
 
@@ -151,35 +128,6 @@ class Api {
 
   static Future<void> excluir(String id) async {
     await _req('DELETE', '/processos/$id');
-  }
-
-  static Future<RespostaAssistente> assistente(
-    String mensagem,
-    List<MensagemChat> historico,
-  ) async {
-    final r = await _req(
-      'POST',
-      '/assistente',
-      corpo: {
-        'mensagem': mensagem,
-        'historico': [
-          for (final m in historico.where((m) => !m.erro))
-            {'papel': m.doUsuario ? 'usuario' : 'assistente', 'texto': m.texto},
-        ],
-      },
-      timeout: const Duration(seconds: 60),
-    ) as Map;
-
-    final f = r['filtro'];
-    return RespostaAssistente(
-      texto: (r['resposta'] ?? '') as String,
-      filtro: f is Map
-          ? FiltroAssistente(
-              ids: List<String>.from(f['ids'] as List),
-              descricao: (f['descricao'] ?? 'Filtro do assistente') as String,
-            )
-          : null,
-    );
   }
 
   static Future<Uint8List?> imagemDe(Processo p) async {

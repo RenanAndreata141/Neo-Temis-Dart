@@ -33,13 +33,14 @@ class _CadastroPageState extends State<CadastroPage> {
 
   String? _validar() {
     final email = _email.text.trim();
-    if (_nome.text.trim().length < 3) return 'Informe seu nome completo.';
-    if (_oab.text.trim().length < 4) return 'Informe seu registro da OAB.';
+    if (_nome.text.trim().length < 3) return 'informe seu nome completo';
+    final erroOab = validarOab(_oab.text);
+    if (erroOab != null) return erroOab;
     if (email.isNotEmpty && !RegExp(r'^\S+@\S+\.\S+$').hasMatch(email)) {
       return 'E-mail inválido.';
     }
-    if (_senha.text.length < 6) return 'A senha precisa ter pelo menos 6 caracteres.';
-    if (_senha.text != _confirma.text) return 'As senhas não conferem.';
+    if (_senha.text.length < 6) return 'a senha precisa ter pelo menos 6 caracteres';
+    if (_senha.text != _confirma.text) return 'as senhas não conferem';
     return null;
   }
 
@@ -79,7 +80,11 @@ class _CadastroPageState extends State<CadastroPage> {
         const SizedBox(height: 20),
         NeoCampo(controller: _nome, dica: 'Nome completo'),
         const SizedBox(height: 14),
-        NeoCampo(controller: _oab, dica: 'Registro oficial da OAB'),
+        NeoCampo(
+          controller: _oab,
+          dica: 'OAB (ex: SP 123456)',
+          mascaras: [MascaraOab()],
+        ),
         const SizedBox(height: 14),
         NeoCampo(
           controller: _email,

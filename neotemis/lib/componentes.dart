@@ -1,6 +1,7 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 import 'theme.dart';
 
@@ -70,6 +71,7 @@ class NeoCampo extends StatelessWidget {
     this.senha = false,
     this.teclado,
     this.aoEnviar,
+    this.mascaras,
   });
 
   final TextEditingController controller;
@@ -77,6 +79,7 @@ class NeoCampo extends StatelessWidget {
   final bool senha;
   final TextInputType? teclado;
   final ValueChanged<String>? aoEnviar;
+  final List<TextInputFormatter>? mascaras;
 
   @override
   Widget build(BuildContext context) {
@@ -89,6 +92,7 @@ class NeoCampo extends StatelessWidget {
         obscureText: senha,
         keyboardType: teclado,
         onSubmitted: aoEnviar,
+        inputFormatters: mascaras,
         style: estilo,
         textAlignVertical: TextAlignVertical.center,
         decoration: InputDecoration(
@@ -169,4 +173,38 @@ class TelaAutenticacao extends StatelessWidget {
       ),
     );
   }
+}
+
+const _ufs = {
+  'AC', 'AL', 'AP', 'AM', 'BA', 'CE', 'DF', 'ES', 'GO', 'MA', 'MT', 'MS', 'MG', 'PA',
+  'PB', 'PR', 'PE', 'PI', 'RJ', 'RN', 'RS', 'RO', 'RR', 'SC', 'SP', 'SE', 'TO',
+};
+
+/// Máscara do registro da OAB: sigla do estado + 6 dígitos (ex.: "SP 123456").
+class MascaraOab extends TextInputFormatter {
+  @override
+  TextEditingValue formatEditUpdate(TextEditingValue antigo, TextEditingValue novo) {
+    var letras = '';
+    var numeros = '';
+    for (final c in novo.text.toUpperCase().split('')) {
+      if (letras.length < 2) {
+        if (RegExp('[A-Z]').hasMatch(c)) letras += c;
+      } else if (numeros.length < 6 && RegExp('[0-9]').hasMatch(c)) {
+        numeros += c;
+      }
+    }
+    final texto = numeros.isEmpty ? letras : '$letras $numeros';
+    return TextEditingValue(
+      text: texto,
+      selection: TextSelection.collapsed(offset: texto.length),
+    );
+  }
+}
+
+/// Devolve a mensagem de erro, ou null se a OAB estiver no formato certo.
+String? validarOab(String oab) {
+  final m = RegExp(r'^([A-Z]{2}) (\d{6})$').firstMatch(oab.trim());
+  if (m == null) return 'A OAB deve ter a sigla do estado e 6 números (ex.: SP 123456).';
+  if (!_ufs.contains(m.group(1))) return 'Sigla de estado inválida na OAB.';
+  return null;
 }

@@ -20,7 +20,7 @@ Future<void> main() async {
     navigatorKey.currentState?.pushNamedAndRemoveUntil('/login', (_) => false);
     if (sessaoExpirada) {
       messengerKey.currentState?.showSnackBar(
-        const SnackBar(content: Text('Sua sessão expirou. Entre novamente.')),
+        const SnackBar(content: Text('Sua sessão expirou')),
       );
     }
   };

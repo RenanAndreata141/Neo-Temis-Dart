@@ -24,7 +24,7 @@ class HomePage extends StatelessWidget {
             titulo: 'CONFIGURAÇÕES',
             tamanhoTitulo: 30,
             icone: Icons.settings_outlined,
-            onTap: () => avisar(context, 'Configurações em breve.'),
+            onTap: () => avisar(context, 'configurações em breve'),
           ),
         ],
       ),
