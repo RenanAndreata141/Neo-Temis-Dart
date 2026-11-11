@@ -5,7 +5,7 @@ module.exports = function auth(req, res, next) {
   const [tipo, token] = cabecalho.split(' ');
 
   if (tipo !== 'Bearer' || !token) {
-    return res.status(401).json({ erro: 'Não autenticado.' });
+    return res.status(401).json({ erro: 'Não autenticado' });
   }
 
   try {
@@ -13,6 +13,6 @@ module.exports = function auth(req, res, next) {
     req.userId = payload.sub;
     next();
   } catch (_) {
-    return res.status(401).json({ erro: 'Sessão expirada. Faça login novamente.' });
+    return res.status(401).json({ erro: 'Sessão expirada' });
   }
 };

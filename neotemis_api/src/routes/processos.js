@@ -25,7 +25,7 @@ function lerCorpo(body, { parcial }) {
 
   if (body.nome !== undefined || !parcial) {
     const nome = String(body.nome || '').trim();
-    if (!nome) return { erro: 'Informe o nome do processo.' };
+    if (!nome) return { erro: 'Informe o nome do processo' };
     campos.nome = nome;
   }
   for (const k of ['numero', 'cliente', 'descricao']) {
@@ -36,14 +36,13 @@ function lerCorpo(body, { parcial }) {
     campos.status = body.status;
   }
   if (body.prazo !== undefined) {
-    // Aceita "AAAA-MM-DD"; vazio ou null apaga o prazo.
     if (body.prazo === null || body.prazo === '') {
       campos.prazo = null;
     } else {
       const texto = String(body.prazo);
       const data = new Date(`${texto}T00:00:00Z`);
       if (!/^\d{4}-\d{2}-\d{2}$/.test(texto) || Number.isNaN(data.getTime())) {
-        return { erro: 'Prazo inválido. Use o formato AAAA-MM-DD.' };
+        return { erro: 'Prazo inválido. Use o formato AAAA-MM-DD' };
       }
       campos.prazo = data;
     }
@@ -53,12 +52,12 @@ function lerCorpo(body, { parcial }) {
   if (body.imagem) {
     const tipo = String(body.imagemTipo || '');
     if (!TIPOS_IMAGEM.includes(tipo)) {
-      return { erro: 'Formato de imagem não suportado. Use JPG, PNG ou WebP.' };
+      return { erro: 'Formato de imagem não suportado. Use JPG, PNG ou WebP' };
     }
     const buf = Buffer.from(String(body.imagem), 'base64');
-    if (buf.length === 0) return { erro: 'Imagem inválida.' };
-    if (buf.length > MAX_IMAGEM_BYTES) return { erro: 'A imagem passa de 5 MB.' };
-    if (!bytesConferemComTipo(buf, tipo)) return { erro: 'O arquivo não é uma imagem válida.' };
+    if (buf.length === 0) return { erro: 'Imagem inválida' };
+    if (buf.length > MAX_IMAGEM_BYTES) return { erro: 'A imagem passa de 5 MB' };
+    if (!bytesConferemComTipo(buf, tipo)) return { erro: 'O arquivo não é uma imagem válida' };
     imagem = { dados: buf, tipo };
   }
 
@@ -67,7 +66,7 @@ function lerCorpo(body, { parcial }) {
 
 function idValido(req, res) {
   if (!mongoose.isValidObjectId(req.params.id)) {
-    res.status(404).json({ erro: 'Processo não encontrado.' });
+    res.status(404).json({ erro: 'Processo não encontrado' });
     return false;
   }
   return true;
@@ -104,9 +103,8 @@ router.put('/:id', async (req, res, next) => {
     const r = lerCorpo(req.body, { parcial: true });
     if (r.erro) return res.status(400).json({ erro: r.erro });
 
-    // O filtro por "usuario" garante que um advogado nunca mexe no processo de outro.
     const doc = await Processo.findOne({ _id: req.params.id, usuario: req.userId });
-    if (!doc) return res.status(404).json({ erro: 'Processo não encontrado.' });
+    if (!doc) return res.status(404).json({ erro: 'Processo não encontrado' });
 
     doc.set(r.campos);
     if (r.imagem) {
@@ -126,7 +124,7 @@ router.delete('/:id', async (req, res, next) => {
   try {
     if (!idValido(req, res)) return;
     const apagado = await Processo.findOneAndDelete({ _id: req.params.id, usuario: req.userId });
-    if (!apagado) return res.status(404).json({ erro: 'Processo não encontrado.' });
+    if (!apagado) return res.status(404).json({ erro: 'Processo não encontrado' });
     res.json({ ok: true });
   } catch (e) {
     next(e);
@@ -140,7 +138,7 @@ router.get('/:id/imagem', async (req, res, next) => {
       '+imagem.dados imagem.tipo'
     );
     if (!doc || !doc.imagem || !doc.imagem.dados) {
-      return res.status(404).json({ erro: 'Sem imagem.' });
+      return res.status(404).json({ erro: 'Sem imagem' });
     }
     res.set('Content-Type', doc.imagem.tipo);
     res.set('X-Content-Type-Options', 'nosniff');

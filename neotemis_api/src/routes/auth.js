@@ -22,10 +22,13 @@ function limitar(req, res, next) {
   if (reg.n > MAX_TENTATIVAS) {
     return res
       .status(429)
-      .json({ erro: 'Muitas tentativas. Aguarde alguns minutos e tente de novo.' });
+      .json({ erro: 'Muitas tentativas. Aguarde alguns minutos e tente de novo' });
   }
   next();
 }
+
+const OAB_VALIDA =
+  /^(AC|AL|AP|AM|BA|CE|DF|ES|GO|MA|MT|MS|MG|PA|PB|PR|PE|PI|RJ|RN|RS|RO|RR|SC|SP|SE|TO)\d{6}$/;
 
 function normalizarOab(valor) {
   return String(valor || '').replace(/\s+/g, '').toUpperCase();
@@ -48,17 +51,19 @@ router.post('/registro', limitar, async (req, res, next) => {
     const email = String(req.body.email || '').trim().toLowerCase();
     const senha = String(req.body.senha || '');
 
-    if (nome.length < 3) return res.status(400).json({ erro: 'Informe seu nome completo.' });
-    if (oab.length < 4) return res.status(400).json({ erro: 'Informe um registro da OAB válido.' });
+    if (nome.length < 3) return res.status(400).json({ erro: 'Informe seu nome completo' });
+    if (!OAB_VALIDA.test(oab)) {
+      return res.status(400).json({ erro: 'A OAB deve ter a sigla do estado e 6 números (ex.: SP 123456)' });
+    }
     if (email && !/^\S+@\S+\.\S+$/.test(email)) {
-      return res.status(400).json({ erro: 'E-mail inválido.' });
+      return res.status(400).json({ erro: 'E-mail inválido' });
     }
     if (senha.length < 6) {
-      return res.status(400).json({ erro: 'A senha precisa ter pelo menos 6 caracteres.' });
+      return res.status(400).json({ erro: 'A senha precisa ter pelo menos 6 caracteres' });
     }
 
     if (await User.exists({ oab })) {
-      return res.status(409).json({ erro: 'Já existe um cadastro com esse registro da OAB.' });
+      return res.status(409).json({ erro: 'Já existe um cadastro com esse registro da OAB' });
     }
 
     const senhaHash = await bcrypt.hash(senha, 10);
@@ -66,9 +71,8 @@ router.post('/registro', limitar, async (req, res, next) => {
 
     res.status(201).json({ token: gerarToken(user), usuario: respostaUsuario(user) });
   } catch (e) {
-    // Corrida entre dois cadastros simultâneos com a mesma OAB.
     if (e && e.code === 11000) {
-      return res.status(409).json({ erro: 'Já existe um cadastro com esse registro da OAB.' });
+      return res.status(409).json({ erro: 'Já existe um cadastro com esse registro da OAB' });
     }
     next(e);
   }
@@ -80,13 +84,12 @@ router.post('/login', limitar, async (req, res, next) => {
     const senha = String(req.body.senha || '');
 
     if (!oab || !senha) {
-      return res.status(400).json({ erro: 'Informe a OAB e a senha.' });
+      return res.status(400).json({ erro: 'Informe a OAB e a senha' });
     }
 
     const user = await User.findOne({ oab });
-    // Mesma mensagem para "usuário não existe" e "senha errada".
     const ok = user && (await bcrypt.compare(senha, user.senhaHash));
-    if (!ok) return res.status(401).json({ erro: 'OAB ou senha incorretos.' });
+    if (!ok) return res.status(401).json({ erro: 'OAB ou senha incorretos' });
 
     res.json({ token: gerarToken(user), usuario: respostaUsuario(user) });
   } catch (e) {
@@ -97,7 +100,7 @@ router.post('/login', limitar, async (req, res, next) => {
 router.get('/eu', auth, async (req, res, next) => {
   try {
     const user = await User.findById(req.userId);
-    if (!user) return res.status(401).json({ erro: 'Sessão inválida.' });
+    if (!user) return res.status(401).json({ erro: 'Sessão inválida' });
     res.json(respostaUsuario(user));
   } catch (e) {
     next(e);

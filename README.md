@@ -6,10 +6,10 @@ O projeto tem duas partes:
 
 | Pasta | O que é | Tecnologias |
 |---|---|---|
-| [`neotemis/`](neotemis/) | App (interface) | Flutter / Dart |
-| [`neotemis_api/`](neotemis_api/) | API (servidor) | Node.js, Express, MongoDB, JWT, Google Gemini |
+| [`neotemis/`](neotemis/) | App (interface) + assistente com IA | Flutter / Dart, Google Gemini |
+| [`neotemis_api/`](neotemis_api/) | API (servidor) | Node.js, Express, MongoDB, JWT |
 
-O app não acessa o banco diretamente: tudo passa pela API, que precisa estar rodando para o app funcionar.
+O app não acessa o banco diretamente: login e processos passam pela API, que precisa estar rodando para o app funcionar. A assistente Têmis é feita em Dart, dentro do app, que fala direto com o Gemini.
 
 ---
 
@@ -94,10 +94,6 @@ MONGODB_URI=mongodb://127.0.0.1:27017/neotemis
 JWT_SECRET=troque-por-um-texto-longo-e-aleatorio
 
 PORT=3000
-
-# Assistente Têmis (opcional). Chave gratuita em https://aistudio.google.com/apikey
-GEMINI_API_KEY=
-GEMINI_MODEL=gemini-3.5-flash,gemini-3.1-flash-lite,gemini-flash-latest
 ```
 
 Inicie a API:
@@ -120,6 +116,12 @@ flutter pub get
 flutter run -d linux      # no Windows: flutter run -d windows
 ```
 
+Para usar a assistente Têmis, passe a chave do Gemini ao rodar (veja a seção [Assistente Têmis](#assistente-têmis-ia)):
+
+```bash
+flutter run -d linux --dart-define=GEMINI_API_KEY=sua_chave
+```
+
 Na primeira tela, clique em **Criar conta**, cadastre-se com um registro da OAB e senha, e pronto.
 
 ---
@@ -134,7 +136,22 @@ O botão redondo com a logo, no canto inferior direito, abre o chat. Exemplos do
 
 Quando a assistente filtra, a tela de Processos mostra só os processos escolhidos, com uma faixa **"Assistente: …"** e o botão **LIMPAR**.
 
-Para funcionar, a API precisa da `GEMINI_API_KEY` no `.env`. Sem ela, o resto do app funciona normalmente e o chat avisa que o assistente não está configurado. Para o assistente responder sobre vencimentos, preencha o campo **Prazo** dos processos.
+A IA é feita em Dart, em [`neotemis/lib/gemini_service.dart`](neotemis/lib/gemini_service.dart). O app busca os processos na API, monta as instruções e chama o Google Gemini direto.
+
+Para funcionar, rode o app com a chave do Gemini (gratuita em https://aistudio.google.com/apikey):
+
+```bash
+flutter run -d linux --dart-define=GEMINI_API_KEY=sua_chave
+
+# Opcional: escolher os modelos (separados por vírgula; se um falhar, tenta o próximo)
+flutter run -d linux --dart-define=GEMINI_API_KEY=sua_chave --dart-define=GEMINI_MODEL=gemini-3.5-flash,gemini-3.1-flash-lite
+```
+
+Sem a chave, o resto do app funciona normalmente e o chat avisa que o assistente não está configurado.
+
+> A chave fica embutida no app compilado. Para um trabalho acadêmico isso não é problema, mas num app publicado o certo seria deixá-la num servidor.
+
+Para o assistente responder sobre vencimentos, preencha o campo **Prazo** dos processos.
 
 ---
 
