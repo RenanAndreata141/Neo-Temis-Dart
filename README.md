@@ -157,4 +157,10 @@ flutter run -d linux --dart-define=GEMINI_API_KEY=sua_chave --dart-define=GEMINI
 
 ## Documentação da API
 
-As rotas estão em [`neotemis_api/README.md`](neotemis_api/README.md).
+As rotas estão em [`neotemis_api/README.md`](neotemis_api/README.md
+
+---
+##Participantes do projeto
+- Renan Pereira Andreata
+- Igor Dias Viana
+
