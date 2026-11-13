@@ -30,7 +30,7 @@ Como as partes se conectam:
 
 O app está configurado para **Linux** e **Windows**.
 
-- **Windows:** [Visual Studio 2022]
+- **Windows:** Necessario Visual Studio 2022
 - **Linux:** compilador e bibliotecas do GTK:
 
   ```bash
