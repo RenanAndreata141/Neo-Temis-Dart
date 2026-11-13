@@ -41,7 +41,7 @@ O app está configurado para **Linux** e **Windows**.
   sudo pacman -S clang cmake ninja pkgconf gtk3
   ```
 
-Depois rode `flutter doctor`: os itens **Flutter** e do desktop (Linux toolchain ou Visual Studio) precisam aparecer com ✓.
+Depois rode `flutter doctor`: os itens **Flutter** e do desktop (Linux toolchain ou Visual Studio).
 
 ### Bibliotecas (instaladas automaticamente)
 
@@ -103,9 +103,9 @@ Inicie a API:
 npm start        # ou: npm run dev  (reinicia sozinha ao salvar arquivos)
 ```
 
-Deve aparecer `Neotemis API rodando na porta 3000`. **Deixe esse terminal aberto** enquanto usa o app.
+**Deixe esse terminal aberto** enquanto usa o app.
 
-> Rode `npm start` **dentro da pasta `neotemis_api`**. Na pasta `NeoTemis` aparece o erro `ENOENT: no such file or directory, open '.../package.json'`.
+> Rode `npm start` 
 
 ### 4. Rodar o app
 
