@@ -100,7 +100,7 @@ PORT=3000
 Inicie a API:
 
 ```bash
-npm start        # ou: npm run dev  (reinicia sozinha ao salvar arquivos)
+npm start        # ou: npm run dev  (reinicia sozinha ao salvar arquivos) E VALE CONSTAR QUE TEM QUE ESTAR DENTRO DA PASTA neotemis_api PRO COMANDO FUNCIONAR!
 ```
 
 **Deixe esse terminal aberto** enquanto usa o app.
