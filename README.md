@@ -144,15 +144,13 @@ A chave do Gemini é gratuita em https://aistudio.google.com/apikey e é passada
 ```bash
 flutter run -d linux --dart-define=GEMINI_API_KEY=sua_chave
 
-# Opcional: escolher os modelos (separados por vírgula; se um falhar, tenta o próximo)
+# Opcional: escolher os modelos (separados por vírgula)
 flutter run -d linux --dart-define=GEMINI_API_KEY=sua_chave --dart-define=GEMINI_MODEL=gemini-3.5-flash,gemini-3.1-flash-lite
 ```
 
 - Sem a chave, o resto do app funciona normalmente e o chat avisa que a assistente não está configurada.
 - Para a assistente responder sobre vencimentos, preencha o campo **Prazo** dos processos.
 - O código fica em [`neotemis/lib/gemini_service.dart`](neotemis/lib/gemini_service.dart).
-
-> A chave fica embutida no app compilado. Para um trabalho acadêmico isso não é problema, mas num app publicado o certo seria deixá-la num servidor.
 
 ---
 
