@@ -26,11 +26,11 @@ Como as partes se conectam:
 | **Flutter SDK** | com Dart 3.13 ou mais novo (testado no Flutter 3.47) | rodar o app |
 | **Chave do Google Gemini** | gratuita, sem cartão | assistente Têmis (opcional) |
 
-### Para rodar o app no computador (desktop)
+### Para rodar o app
 
 O app está configurado para **Linux** e **Windows**.
 
-- **Windows:** [Visual Studio 2022](https://visualstudio.microsoft.com/) (não é o VS Code) com a carga de trabalho **"Desenvolvimento para desktop com C++"**.
+- **Windows:** [Visual Studio 2022]
 - **Linux:** compilador e bibliotecas do GTK:
 
   ```bash
