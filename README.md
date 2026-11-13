@@ -156,26 +156,6 @@ flutter run -d linux --dart-define=GEMINI_API_KEY=sua_chave --dart-define=GEMINI
 
 ---
 
-## Outras plataformas (opcional)
-
-As pastas de Android e Web não estão no projeto. Para criá-las:
-
-```bash
-cd neotemis
-flutter create --platforms=android,web .
-flutter run -d chrome          # web
-flutter run -d emulator-5554   # emulador Android (veja o nome com: flutter devices)
-```
-
-No emulador Android, o app já usa `http://10.0.2.2:3000` para chegar na API automaticamente.
-
-Se a API estiver em outro endereço (outro computador na rede, por exemplo), informe ao rodar:
-
-```bash
-flutter run --dart-define=API_URL=http://192.168.0.10:3000
-```
-
----
 
 ## Documentação da API
 
