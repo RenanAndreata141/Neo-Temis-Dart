@@ -183,4 +183,6 @@ As rotas estão em [`neotemis_api/README.md`](neotemis_api/README.md)
 ## Participantes do projeto
 - Renan Pereira Andreata
 - Igor Dias Viana
-
+- Guilherme Borges
+- Glaucio dos Santos Abrantes Soares
+- João Vitor Albuquerque Zamora
