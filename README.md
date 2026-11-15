@@ -14,10 +14,6 @@ Como as partes se conectam:
 - **Login e processos:** o app não acessa o banco diretamente, tudo passa pela API, que precisa estar rodando para o app funcionar
 - **Assistente Têmis:** é feita em Dart, dentro do app, o app busca os processos na API e conversa direto com o Google Gemini
 
-### Arquitetura do app
-
-O app é dividido em camadas — **UI** (`lib/ui`), **lógica/estado** (`lib/logic`, com `ChangeNotifier`) e **dados** (`lib/data`: models, serviços HTTP e repositórios) — com injeção de dependências em `lib/app`. Detalhes em [`neotemis/README.md`](neotemis/README.md#arquitetura)
-
 ## Prints
 
 | Login | Cadastro | Início |
