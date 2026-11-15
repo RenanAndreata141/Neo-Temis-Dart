@@ -12,7 +12,7 @@ Aplicativo de gestão de processos jurídicos para advogados. O advogado entra c
 Como as partes se conectam:
 
 - **Login e processos:** o app não acessa o banco diretamente, tudo passa pela API, que precisa estar rodando para o app funcionar
-- **Assistente Têmis:** é feita em Dart, dentro do app, o app busca os processos na API e conversa direto com o Google Gemini
+- **Assistente Têmis:** é feita em Dart, dentro do app, o app busca os processos na API e conversa direto com o Google Gemini (Diferencial do Projeto)
 
 ## Prints
 
