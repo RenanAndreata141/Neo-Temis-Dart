@@ -11,12 +11,12 @@ Aplicativo de gestão de processos jurídicos para advogados. O advogado entra c
 
 Como as partes se conectam:
 
-- **Login e processos:** o app não acessa o banco diretamente. Tudo passa pela API, que precisa estar rodando para o app funcionar.
-- **Assistente Têmis:** é feita em Dart, dentro do app. O app busca os processos na API e conversa direto com o Google Gemini.
+- **Login e processos:** o app não acessa o banco diretamente, tudo passa pela API, que precisa estar rodando para o app funcionar
+- **Assistente Têmis:** é feita em Dart, dentro do app, o app busca os processos na API e conversa direto com o Google Gemini
 
 ### Arquitetura do app
 
-O app é dividido em camadas — **UI** (`lib/ui`), **lógica/estado** (`lib/logic`, com `ChangeNotifier`) e **dados** (`lib/data`: models, serviços HTTP e repositórios) — com injeção de dependências em `lib/app`. Detalhes em [`neotemis/README.md`](neotemis/README.md#arquitetura).
+O app é dividido em camadas — **UI** (`lib/ui`), **lógica/estado** (`lib/logic`, com `ChangeNotifier`) e **dados** (`lib/data`: models, serviços HTTP e repositórios) — com injeção de dependências em `lib/app`. Detalhes em [`neotemis/README.md`](neotemis/README.md#arquitetura)
 
 ## Prints
 
@@ -55,11 +55,11 @@ O app está configurado para **Linux** e **Windows**.
   sudo pacman -S clang cmake ninja pkgconf gtk3
   ```
 
-Depois rode `flutter doctor`: os itens **Flutter** e do desktop (Linux toolchain ou Visual Studio).
+Depois rode `flutter doctor`: os itens **Flutter** e do desktop (Linux toolchain ou Visual Studio)
 
 ### Bibliotecas (instaladas automaticamente)
 
-Não é preciso instalar à mão: `npm install` e `flutter pub get` baixam tudo.
+Não é preciso instalar à mão: `npm install` e `flutter pub get` baixam tudo
 
 - **API** ([`package.json`](neotemis_api/package.json)): `express`, `mongoose`, `jsonwebtoken`, `bcryptjs`, `cors`, `dotenv`.
 - **App** ([`pubspec.yaml`](neotemis/pubspec.yaml)): `http`, `shared_preferences`, `image_picker`, `google_fonts`, `flutter_localizations`.
@@ -78,9 +78,9 @@ cd NeoTemis
 ### 2. Ligar o MongoDB
 
 - **Windows:** costuma iniciar sozinho como serviço. Se não, abra "Serviços" e inicie o **MongoDB Server**.
-- **Linux:** `sudo systemctl start mongodb` (em algumas distros o serviço se chama `mongod`).
+- **Linux:** `sudo systemctl start mongodb` (em algumas distros o serviço se chama `mongod`)
 
-Se preferir o **MongoDB Atlas** (na nuvem), pule este passo e use a URL de conexão dele no `.env`.
+Se preferir o **MongoDB Atlas** (na nuvem), pule este passo e use a URL de conexão dele no `.env`
 
 ### 3. Configurar e rodar a API
 
@@ -117,7 +117,7 @@ Inicie a API:
 npm start        # ou: npm run dev  (reinicia sozinha ao salvar arquivos) E VALE CONSTAR QUE TEM QUE ESTAR DENTRO DA PASTA neotemis_api PRO COMANDO FUNCIONAR!
 ```
 
-**Deixe esse terminal aberto** enquanto usa o app.
+**Deixe esse terminal aberto** enquanto usa o app
 
 > Rode `npm start` 
 
@@ -137,7 +137,7 @@ Para usar a assistente Têmis, passe também a chave do Gemini:
 flutter run -d linux --dart-define=GEMINI_API_KEY=sua_chave
 ```
 
-Na primeira tela, clique em **Criar conta**, cadastre-se com um registro da OAB e uma senha, e pronto.
+Na primeira tela, clique em **Criar conta**, cadastre-se com um registro da OAB e uma senha, e pronto
 
 ---
 
@@ -149,7 +149,7 @@ O botão redondo com a logo, no canto inferior direito, abre o chat. Exemplos de
 - "Mostre os processos vencidos"
 - "Filtre os processos aguardando do cliente João"
 
-Quando a assistente filtra, a tela de Processos mostra só os processos escolhidos, com uma faixa **"Assistente: …"** e o botão **LIMPAR**.
+Quando a assistente filtra, a tela de Processos mostra só os processos escolhidos, com uma faixa **"Assistente: …"** e o botão **LIMPAR**
 
 ### Configuração
 
@@ -162,9 +162,9 @@ flutter run -d linux --dart-define=GEMINI_API_KEY=sua_chave
 flutter run -d linux --dart-define=GEMINI_API_KEY=sua_chave --dart-define=GEMINI_MODEL=gemini-3.5-flash,gemini-3.1-flash-lite
 ```
 
-- Sem a chave, o resto do app funciona normalmente e o chat avisa que a assistente não está configurada.
-- Para a assistente responder sobre vencimentos, preencha o campo **Prazo** dos processos.
-- O código fica em [`neotemis/lib/data/repositories/assistente_repository.dart`](neotemis/lib/data/repositories/assistente_repository.dart) (prompt) e [`neotemis/lib/data/services/gemini_client.dart`](neotemis/lib/data/services/gemini_client.dart) (chamada à API do Gemini). A arquitetura do app está descrita em [`neotemis/README.md`](neotemis/README.md).
+- Sem a chave, o resto do app funciona normalmente e o chat avisa que a assistente não está configurada
+- Para a assistente responder sobre vencimentos, preencha o campo **Prazo** dos processos
+- O código fica em [`neotemis/lib/data/repositories/assistente_repository.dart`](neotemis/lib/data/repositories/assistente_repository.dart) (prompt) e [`neotemis/lib/data/services/gemini_client.dart`](neotemis/lib/data/services/gemini_client.dart) (chamada à API do Gemini). A arquitetura do app está descrita em [`neotemis/README.md`](neotemis/README.md)
 
 ---
 
@@ -180,7 +180,7 @@ flutter test      # testes de unidade da lógica (pasta test/)
 
 ## Documentação da API
 
-As rotas estão em [`neotemis_api/README.md`](neotemis_api/README.md).
+As rotas estão em [`neotemis_api/README.md`](neotemis_api/README.md)
 
 ---
 
