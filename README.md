@@ -20,9 +20,9 @@ O app é dividido em camadas — **UI** (`lib/ui`), **lógica/estado** (`lib/log
 
 ## Prints
 
-| Login | Início |
-|---|---|
-| ![Tela de login](docs/prints/login.png) | ![Tela inicial](docs/prints/home.png) |
+| Login | Cadastro | Início |
+|---|---|---|
+| ![Tela de login](docs/prints/login.png) | ![Tela de cadastro](docs/prints/cadastro.png) | ![Tela inicial](docs/prints/home.png) |
 
 | Processos | Detalhes do processo | Assistente Têmis |
 |---|---|---|
