@@ -1,8 +1,9 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
-import 'componentes.dart';
-import 'neotemis_layout.dart';
-import 'theme.dart';
+import '../../layout/neo_pagina_base.dart';
+import '../../rotas.dart';
+import '../../theme/tema.dart';
+import '../../widgets/avisos.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
@@ -18,7 +19,7 @@ class HomePage extends StatelessWidget {
             titulo: 'PROCESSOS',
             tamanhoTitulo: 40,
             icone: Icons.balance,
-            onTap: () => irPara(context, '/processos'),
+            onTap: () => irPara(context, Rotas.processos),
           ),
           _CardMenu(
             titulo: 'CONFIGURAÇÕES',

@@ -1,8 +1,14 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
-import 'api_service.dart';
-import 'componentes.dart';
-import 'theme.dart';
+import '../../../app/dependencias.dart';
+import '../../../logic/login_controller.dart';
+import '../../layout/tela_autenticacao.dart';
+import '../../rotas.dart';
+import '../../theme/tema.dart';
+import '../../widgets/avisos.dart';
+import '../../widgets/neo_botao.dart';
+import '../../widgets/neo_campo.dart';
+import '../../widgets/texto_erro.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -12,43 +18,19 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
+  late final LoginController _controller = LoginController(context.deps.sessao);
   final _oab = TextEditingController();
   final _senha = TextEditingController();
 
-  bool _carregando = false;
-  String? _erro;
-
   @override
   void dispose() {
+    _controller.dispose();
     _oab.dispose();
     _senha.dispose();
     super.dispose();
   }
 
-  Future<void> _entrar() async {
-    final oab = _oab.text.trim();
-    final senha = _senha.text;
-    if (oab.isEmpty || senha.isEmpty) {
-      setState(() => _erro = 'informe a OAB e a senha');
-      return;
-    }
-
-    setState(() {
-      _carregando = true;
-      _erro = null;
-    });
-    try {
-      await Api.login(oab, senha);
-      if (!mounted) return;
-      Navigator.pushNamedAndRemoveUntil(context, '/home', (_) => false);
-    } on ApiException catch (e) {
-      if (!mounted) return;
-      setState(() {
-        _erro = e.mensagem;
-        _carregando = false;
-      });
-    }
-  }
+  void _entrar() => _controller.entrar(_oab.text, _senha.text);
 
   @override
   Widget build(BuildContext context) {
@@ -56,7 +38,7 @@ class _LoginPageState extends State<LoginPage> {
 
     return TelaAutenticacao(
       children: [
-        Image.asset('assets/images/NeoTemis OFICIAL png 1.png', width: 233, height: 120),
+        Image.asset(NeoImagens.logo, width: 233, height: 120),
         const SizedBox(height: 39),
         NeoCampo(
           controller: _oab,
@@ -75,10 +57,7 @@ class _LoginPageState extends State<LoginPage> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             InkWell(
-              onTap: () => avisar(
-                context,
-                'Recuperação de senha em breve',
-              ),
+              onTap: () => avisar(context, 'Recuperação de senha em breve'),
               child: Text('Esqueci a senha', style: estiloLink),
             ),
             Padding(
@@ -86,14 +65,21 @@ class _LoginPageState extends State<LoginPage> {
               child: Text('|', style: estiloLink),
             ),
             InkWell(
-              onTap: () => Navigator.pushNamed(context, '/cadastro'),
+              onTap: () => Navigator.pushNamed(context, Rotas.cadastro),
               child: Text('Cadastre-se', style: estiloLink),
             ),
           ],
         ),
-        if (_erro != null) TextoErro(_erro!),
-        const SizedBox(height: 39),
-        NeoBotao(texto: 'ENTRAR', onTap: _entrar, carregando: _carregando),
+        ListenableBuilder(
+          listenable: _controller,
+          builder: (context, _) => Column(
+            children: [
+              if (_controller.erro case final erro?) TextoErro(erro),
+              const SizedBox(height: 39),
+              NeoBotao(texto: 'ENTRAR', onTap: _entrar, carregando: _controller.carregando),
+            ],
+          ),
+        ),
       ],
     );
   }

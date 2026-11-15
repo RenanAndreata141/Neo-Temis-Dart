@@ -1,14 +1,13 @@
 import 'dart:async';
 
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
-import 'api_service.dart';
-import 'assistente.dart';
-import 'theme.dart';
-
-void irPara(BuildContext context, String rota) {
-  Navigator.pushNamedAndRemoveUntil(context, rota, (_) => false);
-}
+import '../../app/dependencias.dart';
+import '../../core/utils/datas.dart';
+import '../pages/assistente/painel_assistente.dart';
+import '../rotas.dart';
+import '../theme/tema.dart';
+import '../widgets/avisos.dart';
 
 class NeoPaginaBase extends StatelessWidget {
   const NeoPaginaBase({super.key, required this.child, this.onPesquisar});
@@ -25,12 +24,11 @@ class NeoPaginaBase extends StatelessWidget {
         children: [
           Positioned.fill(
             child: Image.asset(
-              'assets/images/NEOhomeFUNDO.png',
+              NeoImagens.fundoHome,
               fit: BoxFit.cover,
               alignment: Alignment.centerRight,
             ),
           ),
-
           Column(
             children: [
               _Cabecalho(onPesquisar: onPesquisar),
@@ -49,7 +47,6 @@ class NeoPaginaBase extends StatelessWidget {
               ),
             ],
           ),
-
           const Positioned(right: 55, bottom: 52, child: _BotaoAssistente()),
         ],
       ),
@@ -70,11 +67,11 @@ class _Cabecalho extends StatelessWidget {
       decoration: const BoxDecoration(gradient: neoGradiente),
       child: Row(
         children: [
-          Image.asset('assets/images/Temis Home Page barra superior.png', height: 42),
+          Image.asset(NeoImagens.logoBarra, height: 42),
           const SizedBox(width: 35),
-          _LinkMenu('INÍCIO', () => irPara(context, '/home')),
+          _LinkMenu('INÍCIO', () => irPara(context, Rotas.home)),
           const SizedBox(width: 40),
-          _LinkMenu('PROCESSOS', () => irPara(context, '/processos')),
+          _LinkMenu('PROCESSOS', () => irPara(context, Rotas.processos)),
           Expanded(
             child: Center(
               child: SizedBox(
@@ -154,29 +151,15 @@ class _Avatar extends StatelessWidget {
   const _Avatar();
 
   Future<void> _confirmarSaida(BuildContext context) async {
-    final sair = await showDialog<bool>(
-      context: context,
-      builder: (ctx) => AlertDialog(
-        title: const Text('Sair da conta?'),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(ctx, false),
-            child: const Text('Cancelar'),
-          ),
-          TextButton(
-            onPressed: () => Navigator.pop(ctx, true),
-            child: const Text('Sair'),
-          ),
-        ],
-      ),
-    );
-    if (sair == true) Api.sair();
+    final sessao = context.deps.sessao;
+    final sair = await confirmar(context, titulo: 'Sair da conta?', textoConfirmar: 'Sair');
+    // A navegação para o login acontece no app, ao ouvir a sessão.
+    if (sair) await sessao.sair();
   }
 
   @override
   Widget build(BuildContext context) {
-    final nome = Api.usuario?['nome'] as String? ?? '';
-    final inicial = nome.isEmpty ? '?' : nome[0].toUpperCase();
+    final inicial = context.deps.sessao.usuario?.inicial ?? '?';
 
     return Tooltip(
       message: 'Sair',
@@ -192,6 +175,7 @@ class _Avatar extends StatelessWidget {
     );
   }
 }
+
 class _Saudacao extends StatefulWidget {
   const _Saudacao();
 
@@ -200,15 +184,6 @@ class _Saudacao extends StatefulWidget {
 }
 
 class _SaudacaoState extends State<_Saudacao> {
-  static const _dias = [
-    'Segunda-feira', 'Terça-feira', 'Quarta-feira', 'Quinta-feira',
-    'Sexta-feira', 'Sábado', 'Domingo',
-  ];
-  static const _meses = [
-    'janeiro', 'fevereiro', 'março', 'abril', 'maio', 'junho',
-    'julho', 'agosto', 'setembro', 'outubro', 'novembro', 'dezembro',
-  ];
-
   DateTime _agora = DateTime.now();
   late final Timer _relogio;
 
@@ -226,16 +201,12 @@ class _SaudacaoState extends State<_Saudacao> {
     super.dispose();
   }
 
-  String _doisDigitos(int n) => n.toString().padLeft(2, '0');
-
   @override
   Widget build(BuildContext context) {
-    final nome = (Api.usuario?['nome'] as String? ?? '').split(' ').first;
-    final data = '${_dias[_agora.weekday - 1]}, ${_agora.day} de ${_meses[_agora.month - 1]}';
-    final hora = '${_doisDigitos(_agora.hour)}:${_doisDigitos(_agora.minute)}:${_doisDigitos(_agora.second)}';
+    final nome = context.deps.sessao.usuario?.primeiroNome ?? '';
 
     return Text(
-      'Olá $nome | $data | $hora',
+      'Olá $nome | ${dataPorExtenso(_agora)} | ${horaCompleta(_agora)}',
       style: NeoTextos.platypi(
         size: 24,
         peso: FontWeight.w400,
@@ -264,7 +235,7 @@ class _BotaoAssistente extends StatelessWidget {
             rotaAtual: ModalRoute.of(context)?.settings.name,
           ),
           child: Center(
-            child: Image.asset('assets/images/Temis Home Page barra superior.png', width: 49, height: 66),
+            child: Image.asset(NeoImagens.logoBarra, width: 49, height: 66),
           ),
         ),
       ),

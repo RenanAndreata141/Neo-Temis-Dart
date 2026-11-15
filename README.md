@@ -14,6 +14,20 @@ Como as partes se conectam:
 - **Login e processos:** o app não acessa o banco diretamente. Tudo passa pela API, que precisa estar rodando para o app funcionar.
 - **Assistente Têmis:** é feita em Dart, dentro do app. O app busca os processos na API e conversa direto com o Google Gemini.
 
+### Arquitetura do app
+
+O app é dividido em camadas — **UI** (`lib/ui`), **lógica/estado** (`lib/logic`, com `ChangeNotifier`) e **dados** (`lib/data`: models, serviços HTTP e repositórios) — com injeção de dependências em `lib/app`. Detalhes em [`neotemis/README.md`](neotemis/README.md#arquitetura).
+
+## Prints
+
+| Login | Início |
+|---|---|
+| ![Tela de login](docs/prints/login.png) | ![Tela inicial](docs/prints/home.png) |
+
+| Processos | Detalhes do processo | Assistente Têmis |
+|---|---|---|
+| ![Lista de processos](docs/prints/processos.png) | ![Diálogo do processo](docs/prints/processo.png) | ![Chat com a Têmis](docs/prints/assistente.png) |
+
 ---
 
 ## Requisitos
@@ -150,17 +164,27 @@ flutter run -d linux --dart-define=GEMINI_API_KEY=sua_chave --dart-define=GEMINI
 
 - Sem a chave, o resto do app funciona normalmente e o chat avisa que a assistente não está configurada.
 - Para a assistente responder sobre vencimentos, preencha o campo **Prazo** dos processos.
-- O código fica em [`neotemis/lib/gemini_service.dart`](neotemis/lib/gemini_service.dart).
+- O código fica em [`neotemis/lib/data/repositories/assistente_repository.dart`](neotemis/lib/data/repositories/assistente_repository.dart) (prompt) e [`neotemis/lib/data/services/gemini_client.dart`](neotemis/lib/data/services/gemini_client.dart) (chamada à API do Gemini). A arquitetura do app está descrita em [`neotemis/README.md`](neotemis/README.md).
 
 ---
 
+## Testes e análise
+
+```bash
+cd neotemis
+flutter analyze   # análise estática (lints do flutter_lints)
+flutter test      # testes de unidade da lógica (pasta test/)
+```
+
+---
 
 ## Documentação da API
 
-As rotas estão em [`neotemis_api/README.md`](neotemis_api/README.md
+As rotas estão em [`neotemis_api/README.md`](neotemis_api/README.md).
 
 ---
-##Participantes do projeto
+
+## Participantes do projeto
 - Renan Pereira Andreata
 - Igor Dias Viana
 

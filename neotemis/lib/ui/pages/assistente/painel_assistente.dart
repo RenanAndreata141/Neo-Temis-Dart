@@ -1,44 +1,11 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
-import 'api_service.dart';
-import 'gemini_service.dart';
-import 'theme.dart';
-
-class Assistente {
-  Assistente._();
-
-  static final mensagens = ValueNotifier<List<MensagemChat>>([]);
-  static final enviando = ValueNotifier<bool>(false);
-
-  static final filtro = ValueNotifier<FiltroAssistente?>(null);
-
-  static void limpar() {
-    mensagens.value = [];
-    enviando.value = false;
-    filtro.value = null;
-  }
-
-  static void _adicionar(MensagemChat m) {
-    mensagens.value = [...mensagens.value, m];
-  }
-
-  static Future<FiltroAssistente?> enviar(String texto) async {
-    final historico = mensagens.value;
-    _adicionar(MensagemChat(doUsuario: true, texto: texto));
-    enviando.value = true;
-    try {
-      final r = await Gemini.perguntar(texto, historico);
-      _adicionar(MensagemChat(doUsuario: false, texto: r.texto));
-      if (r.filtro != null) filtro.value = r.filtro;
-      return r.filtro;
-    } on ApiException catch (e) {
-      _adicionar(MensagemChat(doUsuario: false, texto: e.mensagem, erro: true));
-      return null;
-    } finally {
-      enviando.value = false;
-    }
-  }
-}
+import '../../../app/dependencias.dart';
+import '../../../data/models/assistente.dart';
+import '../../../data/repositories/assistente_repository.dart';
+import '../../../logic/assistente_controller.dart';
+import '../../rotas.dart';
+import '../../theme/tema.dart';
 
 void abrirAssistente(BuildContext context, {String? rotaAtual}) {
   showGeneralDialog(
@@ -51,7 +18,7 @@ void abrirAssistente(BuildContext context, {String? rotaAtual}) {
       alignment: Alignment.bottomRight,
       child: Padding(
         padding: const EdgeInsets.only(right: 24, bottom: 140, left: 24, top: 24),
-        child: _PainelChat(naTelaProcessos: rotaAtual == '/processos'),
+        child: _PainelChat(naTelaProcessos: rotaAtual == Rotas.processos),
       ),
     ),
     transitionBuilder: (ctx, anim, _, child) => FadeTransition(
@@ -81,19 +48,21 @@ class _PainelChatState extends State<_PainelChat> {
     'Filtre os processos aguardando',
   ];
 
+  late final AssistenteController _assistente;
   final _texto = TextEditingController();
   final _rolagem = ScrollController();
 
   @override
   void initState() {
     super.initState();
-    Assistente.mensagens.addListener(_rolarParaFim);
+    _assistente = context.deps.assistente;
+    _assistente.addListener(_rolarParaFim);
     WidgetsBinding.instance.addPostFrameCallback((_) => _rolarParaFim());
   }
 
   @override
   void dispose() {
-    Assistente.mensagens.removeListener(_rolarParaFim);
+    _assistente.removeListener(_rolarParaFim);
     _texto.dispose();
     _rolagem.dispose();
     super.dispose();
@@ -113,13 +82,14 @@ class _PainelChatState extends State<_PainelChat> {
 
   Future<void> _enviar([String? sugestao]) async {
     final texto = (sugestao ?? _texto.text).trim();
-    if (texto.isEmpty || Assistente.enviando.value) return;
+    if (texto.isEmpty || _assistente.enviando) return;
     _texto.clear();
 
-    final filtro = await Assistente.enviar(texto);
+    final filtro = await _assistente.enviar(texto);
 
+    // O filtro aparece na tela de Processos; se estiver em outra, vai até ela.
     if (filtro != null && !widget.naTelaProcessos && mounted) {
-      Navigator.of(context).pushNamedAndRemoveUntil('/processos', (_) => false);
+      Navigator.of(context).pushNamedAndRemoveUntil(Rotas.processos, (_) => false);
     }
   }
 
@@ -134,18 +104,17 @@ class _PainelChatState extends State<_PainelChat> {
         height: (altura - 180).clamp(320.0, 560.0),
         decoration: neoCardBranco,
         clipBehavior: Clip.antiAlias,
-        child: Column(
-          children: [
-            _cabecalho(),
-            Expanded(
-              child: ValueListenableBuilder<List<MensagemChat>>(
-                valueListenable: Assistente.mensagens,
-                builder: (_, mensagens, _) =>
-                    mensagens.isEmpty ? _boasVindas() : _lista(mensagens),
+        child: ListenableBuilder(
+          listenable: _assistente,
+          builder: (context, _) => Column(
+            children: [
+              _cabecalho(),
+              Expanded(
+                child: _assistente.mensagens.isEmpty ? _boasVindas() : _lista(),
               ),
-            ),
-            _campoTexto(),
-          ],
+              _campoTexto(),
+            ],
+          ),
         ),
       ),
     );
@@ -157,7 +126,7 @@ class _PainelChatState extends State<_PainelChat> {
       decoration: const BoxDecoration(gradient: neoGradiente),
       child: Row(
         children: [
-          Image.asset('assets/images/Temis Home Page barra superior.png', height: 32),
+          Image.asset(NeoImagens.logoBarra, height: 32),
           const SizedBox(width: 12),
           Expanded(
             child: Text(
@@ -168,7 +137,7 @@ class _PainelChatState extends State<_PainelChat> {
           IconButton(
             tooltip: 'Nova conversa',
             icon: const Icon(Icons.refresh, color: Colors.white),
-            onPressed: () => Assistente.mensagens.value = [],
+            onPressed: _assistente.novaConversa,
           ),
           IconButton(
             tooltip: 'Fechar',
@@ -204,16 +173,14 @@ class _PainelChatState extends State<_PainelChat> {
     );
   }
 
-  Widget _lista(List<MensagemChat> mensagens) {
-    return ValueListenableBuilder<bool>(
-      valueListenable: Assistente.enviando,
-      builder: (_, enviando, _) => ListView.builder(
-        controller: _rolagem,
-        padding: const EdgeInsets.all(14),
-        itemCount: mensagens.length + (enviando ? 1 : 0),
-        itemBuilder: (_, i) =>
-            i < mensagens.length ? _Balao(mensagens[i]) : const _Digitando(),
-      ),
+  Widget _lista() {
+    final mensagens = _assistente.mensagens;
+    final enviando = _assistente.enviando;
+    return ListView.builder(
+      controller: _rolagem,
+      padding: const EdgeInsets.all(14),
+      itemCount: mensagens.length + (enviando ? 1 : 0),
+      itemBuilder: (_, i) => i < mensagens.length ? _Balao(mensagens[i]) : const _Digitando(),
     );
   }
 
@@ -229,7 +196,7 @@ class _PainelChatState extends State<_PainelChat> {
             child: TextField(
               controller: _texto,
               autofocus: true,
-              maxLength: 1000,
+              maxLength: AssistenteRepository.maxMensagem,
               minLines: 1,
               maxLines: 4,
               textInputAction: TextInputAction.send,
@@ -244,14 +211,11 @@ class _PainelChatState extends State<_PainelChat> {
               ),
             ),
           ),
-          ValueListenableBuilder<bool>(
-            valueListenable: Assistente.enviando,
-            builder: (_, enviando, _) => IconButton(
-              tooltip: 'Enviar',
-              onPressed: enviando ? null : _enviar,
-              icon: const Icon(Icons.send),
-              color: NeoCores.botao,
-            ),
+          IconButton(
+            tooltip: 'Enviar',
+            onPressed: _assistente.enviando ? null : _enviar,
+            icon: const Icon(Icons.send),
+            color: NeoCores.botao,
           ),
         ],
       ),
@@ -275,7 +239,7 @@ class _Balao extends StatelessWidget {
       fundo = Colors.red.shade50;
       cor = Colors.red.shade900;
     } else {
-      fundo = const Color(0xFFEFEFEF);
+      fundo = NeoCores.balaoAssistente;
       cor = Colors.black;
     }
 
@@ -314,7 +278,7 @@ class _Digitando extends StatelessWidget {
         margin: const EdgeInsets.only(bottom: 10),
         padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
         decoration: BoxDecoration(
-          color: const Color(0xFFEFEFEF),
+          color: NeoCores.balaoAssistente,
           borderRadius: BorderRadius.circular(14),
         ),
         child: const SizedBox(
