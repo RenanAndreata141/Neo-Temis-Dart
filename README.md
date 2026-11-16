@@ -39,7 +39,7 @@ Como as partes se conectam:
 
 ### Para rodar o app
 
-O app está configurado para **Linux** e **Windows**.
+O app está configurado para **Linux** e **Windows**
 
 - **Windows:** Necessario Visual Studio 2022
 - **Linux:** compilador e bibliotecas do GTK:
@@ -59,7 +59,7 @@ Depois rode `flutter doctor`: os itens **Flutter** e do desktop (Linux toolchain
 Não é preciso instalar à mão: `npm install` e `flutter pub get` baixam tudo
 
 - **API** ([`package.json`](neotemis_api/package.json)): `express`, `mongoose`, `jsonwebtoken`, `bcryptjs`, `cors`, `dotenv`.
-- **App** ([`pubspec.yaml`](neotemis/pubspec.yaml)): `http`, `shared_preferences`, `image_picker`, `google_fonts`, `flutter_localizations`.
+- **App** ([`pubspec.yaml`](neotemis/pubspec.yaml)): `http`, `shared_preferences`, `image_picker`, `google_fonts`, `flutter_localizations`
 
 ---
 
@@ -74,7 +74,7 @@ cd NeoTemis
 
 ### 2. Ligar o MongoDB
 
-- **Windows:** costuma iniciar sozinho como serviço. Se não, abra "Serviços" e inicie o **MongoDB Server**.
+- **Windows:** costuma iniciar sozinho como serviço. Se não, abra "Serviços" e inicie o **MongoDB Server**
 - **Linux:** `sudo systemctl start mongodb` (em algumas distros o serviço se chama `mongod`)
 
 Se preferir o **MongoDB Atlas** (na nuvem), pule este passo e use a URL de conexão dele no `.env`
@@ -99,10 +99,10 @@ copy .env.example .env
 Preencha o `.env`:
 
 ```env
-# Endereço do banco. Se usar o Atlas, cole a URL de conexão dele aqui.
+# Endereço do banco
 MONGODB_URI=mongodb://127.0.0.1:27017/neotemis
 
-# Qualquer texto longo e aleatório. Serve para assinar os logins.
+# Qualquer texto longo e aleatório, serve para assinar os logins
 JWT_SECRET=troque-por-um-texto-longo-e-aleatorio
 
 PORT=3000
