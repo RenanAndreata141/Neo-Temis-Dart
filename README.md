@@ -187,3 +187,4 @@ As rotas estão em [`neotemis_api/README.md`](neotemis_api/README.md)
 - Guilherme Borges RGM: 11251100564
 - Glaucio dos Santos Abrantes Soares
 - João Vitor Albuquerque Zamora
+Glaucio dos Santos Abrantes Soares
